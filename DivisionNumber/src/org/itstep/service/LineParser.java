@@ -108,7 +108,4 @@ public class LineParser {
 		ratio  = result*divisor;
 		return ratio; //возвращает значение результата умноженого на делитель
 	}
-	
-	
-
 }
