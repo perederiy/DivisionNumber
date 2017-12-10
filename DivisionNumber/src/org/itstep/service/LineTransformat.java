@@ -1,6 +1,6 @@
 package org.itstep.service;
 
-public class LineParser {
+public class LineTransformat {
 
 	public StringBuffer getFinalText(int divide, int divisor) {
 		StringBuffer finalText = new StringBuffer();
@@ -8,27 +8,13 @@ public class LineParser {
 		StringBuffer resultText = new StringBuffer();
 		StringBuffer processingText = new StringBuffer();
 		StringBuffer blankText = new StringBuffer();
-		String periodNum = "";
+		String excessNum = "";
 		int result = 0;
-		int nonIntRes = 0;
+		int excess = 0;
 		int counter = 0;
 		headText.append("_" + divide + " |_" + divisor + "__ \n " + getRatio(divide, divisor) + "    |");
 		result = divide/divisor;
-		while ((Integer.toString(divide).length()-1) - Integer.toString(divisor).length() > 0){
-			if ((getResidential(divide, divisor) - getRatio(divide, divisor)) != 0){
-				divide = Integer.parseInt(Integer.toString(getResidential(divide, divisor) 
-						- getRatio(divide, divisor)) + Integer.toString(getResidentialPast(divide, divisor)));
-				blankText.append(" ");
-				processingText.append("" + blankText + "_" + getResidential(divide, divisor) + "\n " 
-				+ blankText + getRatio(divide, divisor) + "\n");
-			} else {
-				divide = getResidentialPast(divide, divisor);
-				blankText.append("  ");
-				processingText.append("" + blankText + "_" + getResidential(divide, divisor) + "\n " 
-				+ blankText + getRatio(divide, divisor) + "\n");
-			}
-		}
-		if(Integer.toString(divide/divisor).length() == 2){
+		while (((Integer.toString(divide).length()-1) - Integer.toString(divisor).length() > 0) || (Integer.toString(divide/divisor).length() == 2)){
 			if ((getResidential(divide, divisor) - getRatio(divide, divisor)) != 0){
 				divide = Integer.parseInt(Integer.toString(getResidential(divide, divisor) 
 						- getRatio(divide, divisor)) + Integer.toString(getResidentialPast(divide, divisor)));
@@ -47,12 +33,11 @@ public class LineParser {
 			resultText.append("" + result + ",");
 			do{
 				divide = (getResidential(divide, divisor) - getRatio(divide, divisor))*10;
-				nonIntRes = divide/divisor;
-				periodNum = periodNum + nonIntRes;
-				//resultText.append("" + nonIntRes);
+				excess = divide/divisor;
+				excessNum = excessNum + excess;
 				counter++;
 			} while(divide%divisor != 0 && counter <= 9);
-			resultText.append("" + getPeriodNum(periodNum));
+			resultText.append("" + getPeriod(excessNum, divisor));
 		} else{
 			resultText.append("" + result);
 		}
@@ -61,17 +46,48 @@ public class LineParser {
 		return finalText;
 }
 	
-	public String getPeriodNum(String periodNum) {
+	public String getPeriod(String excessNum, int divisor) {
+		int periodValue = Integer.toString(divisor).length();
 		String period = "";
-		char [] num = periodNum.toCharArray();
-		for (int i = 1; i < 1; i++) {
-			if (num[i-1] != num[i]){
-				period = period + num[i];
+		int value = 0;
+		char[] num = excessNum.toCharArray();
+		if (periodValue == 1){
+			for (int i= 0; i < (excessNum.length()-1); i++){
+				if (Character.getNumericValue(num[i]) != Character.getNumericValue(num[i+1])){
+					period = period + Character.getNumericValue(num[i]);
+				}else{
+					value =Character.getNumericValue(num[i]);
+				}
 			}
-			else{
-				//period = period +  "(" + num[i] + ")";
-			}	
+			if (value != 0){
+				period =period + "(" + value + ")";
+			} else {
+				period = excessNum;
+			}
 		}
+			
+			if (periodValue == 2){
+				for(int i = 0; i<((excessNum.length()-1)/2); i++){
+					if((Character.getNumericValue(num[i]) * 10 + Character.getNumericValue(num[i+1])) !=
+							(Character.getNumericValue(num[i+2]) * 10 + Character.getNumericValue(num[i+3]))){
+						period = period + Character.getNumericValue(num[i]) + Character.getNumericValue(num[i+1]);
+					} else {
+						value =Character.getNumericValue(num[i]) * 10 + Character.getNumericValue(num[i+1]);
+					}
+					i = i + 3;
+				if (value != 0){
+					period = period + "(" + value + ")";
+				} else {
+					period = excessNum;
+				}
+			}
+				if (excessNum.length()<10){
+					period = excessNum;
+				}
+		}
+			if (periodValue == 3){
+				period = excessNum;
+			}
 		return period; 	
 	}
 
@@ -82,7 +98,7 @@ public class LineParser {
 				i++;
 			}
 		resedent = Integer.parseInt(Integer.toString(divide).substring(0, i)); 
-		return resedent; //возвращает число которое делится на делитель
+		return resedent; 
 	}
 	
 	public int getResidentialPast(int divide, int divisor){
@@ -92,7 +108,7 @@ public class LineParser {
 				i++;
 			}
 			resedentPast = Integer.parseInt(Integer.toString(divide).substring(i, Integer.toString(divide).length())); 
-		return resedentPast; //возвращает число которое является остатком	
+		return resedentPast; 	
 	}
 	
 	public int getRatio(int divide, int divisor){
@@ -106,6 +122,6 @@ public class LineParser {
 		resedent = Integer.parseInt(Integer.toString(divide).substring(0, i));
 		result = resedent/divisor;
 		ratio  = result*divisor;
-		return ratio; //возвращает значение результата умноженого на делитель
+		return ratio; 
 	}
 }

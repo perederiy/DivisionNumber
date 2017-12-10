@@ -1,15 +1,15 @@
 package org.itstep;
 
 import org.itstep.pojo.DefenitionVariable;
-import org.itstep.service.LineParser;
+import org.itstep.service.LineTransformat;
 
 public class AppRunner {
 
 	public static void main(String[] args) {
-		DefenitionVariable variable = new DefenitionVariable(12345,7);
+		DefenitionVariable variable = new DefenitionVariable(12345,103);
 		
-		LineParser parser = new LineParser();
-		StringBuffer finalText = parser.getFinalText(variable.getDivide(), variable.getDivisor());
+		LineTransformat transformat = new LineTransformat();
+		StringBuffer finalText = transformat.getFinalText(variable.getDivide(), variable.getDivisor());
 		
 		System.out.println(finalText);
 	}

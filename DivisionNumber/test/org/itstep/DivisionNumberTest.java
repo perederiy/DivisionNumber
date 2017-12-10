@@ -2,7 +2,7 @@ package org.itstep;
 
 import static org.junit.Assert.*;
 
-import org.itstep.service.LineParser;
+import org.itstep.service.LineTransformat;
 import org.junit.Test;
 
 public class DivisionNumberTest {
@@ -12,7 +12,7 @@ public class DivisionNumberTest {
 	public void testGetResidential() {
 		int divide = 12345;
 		int divisor = 2;
-		LineParser resedent = new LineParser();
+		LineTransformat resedent = new LineTransformat();
 		int outInt = resedent.getResidential(divide, divisor);
 		assertEquals(12, outInt);	
 	}
@@ -21,7 +21,7 @@ public class DivisionNumberTest {
 	public void testgetResedentialPast(){
 		int divide = 12345;
 		int divisor = 2;
-		LineParser resedentPast = new LineParser();
+		LineTransformat resedentPast = new LineTransformat();
 		int outInt = resedentPast.getResidentialPast(divide, divisor);
 		assertEquals(345, outInt);
 	}
@@ -30,8 +30,17 @@ public class DivisionNumberTest {
 	public void testgetRatio(){
 		int divide = 345;
 		int divisor = 2;
-		LineParser ratio = new LineParser();
+		LineTransformat ratio = new LineTransformat();
 		int outInt = ratio.getRatio(divide, divisor);
 		assertEquals(2, outInt);
+	}
+	
+	@Test
+	public void testgetPeriod(){
+		int divisor = 1;
+		String  excessNum = "1234333333";
+		LineTransformat period = new LineTransformat();
+		String outInt = period.getPeriod(excessNum, divisor);
+		assertEquals("1234(3)", outInt);
 	}
 }
